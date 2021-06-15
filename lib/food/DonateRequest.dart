@@ -13,22 +13,27 @@ class ReqList extends StatefulWidget {
 class _ReqListState extends State<ReqList> {
   List<Widget> list = new List<Widget>.empty(growable: true);
 
-  static late LocationData _locData;
+  late double lat, long;
   static void _showDirection(double lat, double long) async {
     bool flag = await MapLauncher.isMapAvailable(MapType.google) as bool;
     Location location = new Location();
     // _locData =
-    await location.getLocation().then((value) => print(value));
+    await location.getLocation().then((value) {
+      lat = value.latitude!;
+      long = value.longitude!;
+    });
     await MapLauncher.showDirections(
-        mapType: MapType.google, destination: Coords(lat, long));
+        mapType: MapType.google,
+        destination: Coords(lat, long),
+        origin: Coords(lat, long));
   }
 
   @override
   Widget build(BuildContext context) {
-    Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
         .collection('foodrequest')
-        .doc(FirebaseAuth.instance.currentUser!.displayName)
-        .collection("ashram")
+        .where("name",
+            isEqualTo: FirebaseAuth.instance.currentUser!.displayName)
         .snapshots();
 
     return StreamBuilder<QuerySnapshot>(

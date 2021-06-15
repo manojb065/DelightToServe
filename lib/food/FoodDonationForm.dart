@@ -33,11 +33,10 @@ class foodDonateRequest extends StatelessWidget {
     data.remove("loc");
     data.addAll(l);
     db.child(data['name']).set(data);
+    String id = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance
         .collection('foodrequest')
-        .doc(FirebaseAuth.instance.currentUser!.displayName)
-        .collection("ashram")
-        .doc(Aname)
+        .doc("$Aname-$id")
         .set({
       "aname": Aname,
       "time": t,
