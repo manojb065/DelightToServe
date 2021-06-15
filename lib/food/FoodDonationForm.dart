@@ -1,13 +1,54 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class foodDonateRequest extends StatelessWidget {
   final String Aname;
+  final double lat, long;
   static late LocationData _locData;
   GlobalKey<FormBuilderState> _formkey = new GlobalKey<FormBuilderState>();
-  foodDonateRequest({required this.Aname});
+  foodDonateRequest(
+      {required this.Aname, required this.lat, required this.long});
+
+  void _addRequest() async {
+    getLocation();
+    var db = FirebaseDatabase.instance
+        .reference()
+        .child("Ashram")
+        .child(Aname)
+        .child("Food");
+    Map<String, dynamic> data =
+        Map<String, dynamic>.from(_formkey.currentState!.value);
+
+    DateTime t = data['time'];
+    var l = {
+      'date': t.toIso8601String(),
+      'lat': _locData.latitude,
+      'long': _locData.longitude
+    };
+    data.remove("time");
+    data.remove("loc");
+    data.addAll(l);
+    db.child(data['name']).set(data);
+    await FirebaseFirestore.instance
+        .collection('foodrequest')
+        .doc(FirebaseAuth.instance.currentUser!.displayName)
+        .collection("ashram")
+        .doc(Aname)
+        .set({
+      "aname": Aname,
+      "time": t,
+      "status": false,
+      "phone": data["phone"],
+      "name": data["name"],
+      "lat": lat,
+      "long": long
+    });
+  }
+
   static void getLocation() async {
     var location = new Location();
     var _svrenb = await location.serviceEnabled();
@@ -116,29 +157,8 @@ class foodDonateRequest extends StatelessWidget {
                           if (_formkey.currentState!.validate()) {
                             _formkey.currentState!.save();
                           }
+                          _addRequest();
                           Navigator.of(context).pop();
-                          getLocation();
-
-                          var db = FirebaseDatabase.instance
-                              .reference()
-                              .child("Ashram")
-                              .child(Aname)
-                              .child("Food");
-                          Map<String, dynamic> data = Map<String, dynamic>.from(
-                              _formkey.currentState!.value);
-
-                          print(data['time']);
-                          DateTime t = data['time'];
-                          var l = {
-                            'date': t.toIso8601String(),
-                            'lat': _locData.latitude,
-                            'long': _locData.longitude
-                          };
-                          data.remove("time");
-                          data.remove("loc");
-                          data.addAll(l);
-                          db.child(data['name']).set(data);
-                          db.onDisconnect();
                         },
                         icon: Icon(Icons.send),
                         label: Text("submit"))

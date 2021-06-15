@@ -1,17 +1,14 @@
 //@dart=2.9
-import 'package:delightoserver/food/DonateRequest.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:delightoserver/screenRoute.dart';
-import 'food/AshramList.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
-    initialRoute: "/home",
+    initialRoute: "/",
     darkTheme: ThemeData(
       primarySwatch: Colors.grey,
       primaryColor: Colors.black,

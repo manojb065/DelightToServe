@@ -11,7 +11,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   GlobalKey<FormBuilderState> _formkey = new GlobalKey<FormBuilderState>();
   String err = "Successfully logged in";
-  @override
+
   bool _showPassword = true;
 
   void toggle() {
@@ -40,9 +40,9 @@ class _LoginState extends State<Login> {
     return flag;
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/",
       onGenerateRoute: screenRoute.routeScreen,
       home: Scaffold(
         appBar: AppBar(
@@ -92,13 +92,13 @@ class _LoginState extends State<Login> {
                     if (_formkey.currentState!.validate()) {
                       _formkey.currentState!.save();
                     }
-                    var data =
-                        Map<String, dynamic>.from(_formkey.currentState!.value);
+
+                    Map<String, dynamic>.from(_formkey.currentState!.value);
                     _sigin(Map<String, dynamic>.from(
                             _formkey.currentState!.value))
                         .then((value) {
                       if (value) {
-                        Navigator.of(context).popAndPushNamed("/home");
+                        Navigator.of(context).popAndPushNamed("/");
                       }
                     });
                   },

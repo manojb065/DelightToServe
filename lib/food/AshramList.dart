@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'DonateRequest.dart';
 
@@ -22,13 +21,6 @@ class _AshramListState extends State<AshramList> {
 
     db =
         FirebaseDatabase.instance.reference().child("Ashram/Ashraminfo").once();
-  }
-
-  _getdata() async {
-    return FirebaseDatabase.instance
-        .reference()
-        .child("Ashram/Ashraminfo")
-        .once();
   }
 
   Widget _buildList({required Map<String, dynamic> value}) {
@@ -58,8 +50,12 @@ class _AshramListState extends State<AshramList> {
             ),
           ),
           ElevatedButton.icon(
-              onPressed: () => Navigator.of(context)
-                  .pushNamed("/food", arguments: value['name']),
+              onPressed: () => Navigator.of(context).pushNamed("/food",
+                      arguments: [
+                        value['name'],
+                        value['location']["lat"],
+                        value['location']['long']
+                      ]),
               icon: Icon(Icons.add_circle_outline),
               label: Text("Donate"))
         ],
@@ -99,41 +95,41 @@ class _AshramListState extends State<AshramList> {
           },
         ),
         body: Container(
-            color: Colors.blueAccent,
+            // color: Colors.blueAccent,
             child: Center(
-              child: _page == 0
-                  ? FutureBuilder(
-                      future: db,
-                      builder: (build, AsyncSnapshot<DataSnapshot> snapshot) {
-                        DataSnapshot? data = snapshot.data;
+          child: _page == 0
+              ? FutureBuilder(
+                  future: db,
+                  builder: (build, AsyncSnapshot<DataSnapshot> snapshot) {
+                    DataSnapshot? data = snapshot.data;
 
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                            print("error in connecting");
-                            break;
-                          case ConnectionState.active:
-                            print("connection is active");
-                            break;
-                          case ConnectionState.waiting:
-                            return CircularProgressIndicator(
-                              color: Colors.amber[700],
-                            );
-                          case ConnectionState.done:
-                            _listBuild(Map<String, dynamic>.from(data!.value));
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        print("error in connecting");
+                        break;
+                      case ConnectionState.active:
+                        print("connection is active");
+                        break;
+                      case ConnectionState.waiting:
+                        return CircularProgressIndicator(
+                          color: Colors.amber[700],
+                        );
+                      case ConnectionState.done:
+                        _listBuild(Map<String, dynamic>.from(data!.value));
 
-                            return GridView.count(
-                                primary: false,
-                                padding: const EdgeInsets.all(20),
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                crossAxisCount: 2,
-                                children: list);
-                          default:
-                            return Text("this is List");
-                        }
-                        return Text("de;afut");
-                      })
-                  : ReqList(),
-            )));
+                        return GridView.count(
+                            primary: false,
+                            padding: const EdgeInsets.all(20),
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            crossAxisCount: 2,
+                            children: list);
+                      default:
+                        return Text("this is List");
+                    }
+                    return Text("de;afut");
+                  })
+              : ReqList(),
+        )));
   }
 }
