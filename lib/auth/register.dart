@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../screenRoute.dart';
@@ -13,12 +15,20 @@ class _SignupState extends State<Signup> {
   String err = "successfully created account";
   bool _showPassword = false;
 
-  bool _sigup(Map<String, dynamic> data) {
+  void _sigup(Map<String, dynamic> data) async {
     try {
-      UserCredential usr = FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: data['email'], password: data['password']) as UserCredential;
+      print("entered");
+      UserCredential usr = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: data['email'], password: data['password']);
       usr.user!.updateDisplayName(data['username']);
-      return true;
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(err),
+        duration: Duration(microseconds: 40),
+      ));
+      Navigator.of(context).popAndPushNamed("/");
+      // return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         err = 'No user found for that email.';
@@ -28,7 +38,8 @@ class _SignupState extends State<Signup> {
     } catch (e) {
       err = e.toString();
     }
-    return false;
+    // return false;
+    print("exit");
   }
 
   void toggle() {
@@ -114,19 +125,8 @@ class _SignupState extends State<Signup> {
                       if (_formkey.currentState!.validate()) {
                         _formkey.currentState!.save();
                       }
-                      if (_sigup(Map<String, dynamic>.from(
-                          _formkey.currentState!.value))) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(err),
-                          duration: Duration(microseconds: 40),
-                        ));
-                        Navigator.of(context).popAndPushNamed("/");
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(err),
-                          duration: Duration(microseconds: 40),
-                        ));
-                      }
+                      _sigup(Map<String, dynamic>.from(
+                          _formkey.currentState!.value));
                     },
                     icon: Icon(Icons.send),
                     label: Text("Register")),

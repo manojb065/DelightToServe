@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'food/FoodDonationForm.dart';
+import 'auth/user.dart';
 
 class screenRoute {
   static Route<dynamic> routeScreen(RouteSettings set) {
@@ -31,7 +32,8 @@ class screenRoute {
                 ));
       case "/track":
         return MaterialPageRoute(builder: (build) => Tracking());
-
+      case "/profile":
+        return MaterialPageRoute(builder: (build) => UserProfile());
       default:
         return MaterialPageRoute(builder: (build) => Login());
     }

@@ -31,9 +31,8 @@ class Home extends StatelessWidget {
         title: Text("Delight to Server"),
         actions: [
           IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).popAndPushNamed("/");
+            onPressed: () {
+              Navigator.of(context).pushNamed("/profile");
             },
             icon: Icon(Icons.account_circle_outlined),
             color: Colors.black,

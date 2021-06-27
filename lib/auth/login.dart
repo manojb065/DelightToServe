@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../screenRoute.dart';
@@ -20,12 +22,23 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future<bool> _sigin(Map<String, dynamic> data) async {
-    bool flag = false;
+  void _sigin(Map<String, dynamic> data) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      var usr = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: data['email'], password: data['password']);
-      flag = true;
+
+      FirebaseFirestore.instance
+          .collection("AshramUser")
+          .where("uid", isEqualTo: usr.user!.uid)
+          .get()
+          .then((value) {
+        if (value.docs.isEmpty) {
+          print("entred");
+          Navigator.of(context).popAndPushNamed("/");
+        } else {
+          FirebaseAuth.instance.signOut();
+        }
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         err = 'No user found for that email.';
@@ -37,7 +50,6 @@ class _LoginState extends State<Login> {
       content: Text(err),
       duration: Duration(seconds: 5),
     ));
-    return flag;
   }
 
   @override
@@ -95,12 +107,7 @@ class _LoginState extends State<Login> {
 
                     Map<String, dynamic>.from(_formkey.currentState!.value);
                     _sigin(Map<String, dynamic>.from(
-                            _formkey.currentState!.value))
-                        .then((value) {
-                      if (value) {
-                        Navigator.of(context).popAndPushNamed("/");
-                      }
-                    });
+                        _formkey.currentState!.value));
                   },
                   icon: Icon(Icons.send),
                   label: Text("Login")),
