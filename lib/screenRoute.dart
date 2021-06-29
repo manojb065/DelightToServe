@@ -1,6 +1,6 @@
 import 'package:delightoserver/auth/login.dart';
 import 'package:delightoserver/auth/register.dart';
-import 'package:delightoserver/food/AshramList.dart';
+import 'package:delightoserver/food/Amain.dart';
 import 'package:delightoserver/food/tracking/map.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';

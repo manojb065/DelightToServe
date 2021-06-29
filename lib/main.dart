@@ -1,5 +1,4 @@
 //@dart=2.9
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:delightoserver/screenRoute.dart';
@@ -30,12 +29,15 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text("Delight to Server"),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed("/profile");
-            },
-            icon: Icon(Icons.account_circle_outlined),
-            color: Colors.black,
+          Tooltip(
+            message: "profile",
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed("/profile");
+              },
+              icon: Icon(Icons.account_circle_outlined),
+              color: Colors.black,
+            ),
           )
         ],
       ),

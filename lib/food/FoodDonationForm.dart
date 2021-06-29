@@ -15,7 +15,17 @@ class foodDonateRequest extends StatelessWidget {
       {required this.Aname, required this.lat, required this.long});
 
   void _addRequest() async {
-    getLocation();
+    var location = new Location();
+    var _svrenb = await location.serviceEnabled();
+    if (!_svrenb) {
+      _svrenb = await location.requestService();
+    }
+    var _permission = await location.hasPermission();
+    if (_permission == PermissionStatus.denied ||
+        _permission == PermissionStatus.deniedForever) {
+      _permission = await location.requestPermission();
+    }
+    _locData = await location.getLocation();
     var db = FirebaseDatabase.instance
         .reference()
         .child("Ashram")
@@ -25,6 +35,7 @@ class foodDonateRequest extends StatelessWidget {
         Map<String, dynamic>.from(_formkey.currentState!.value);
 
     DateTime t = data['time'];
+
     var l = {
       'date': t.toIso8601String(),
       'lat': _locData.latitude,

@@ -57,21 +57,27 @@ class _ReqListState extends State<ReqList> {
 
           String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
           return new ListTile(
-            onTap: () {
-              print("${data['aname']} got selected");
-              if (data['status']) {
-                Navigator.of(context).pushNamed("/track");
-              }
-            },
+            // onTap: () {
+            //   print("${data['aname']} got selected");
+            //   if (data['status']) {
+            //     Navigator.of(context).pushNamed("/track");
+            //   }
+            // },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 data["status"] == false
-                    ? Icon(Icons.pending_actions)
-                    : Icon(Icons.assignment_turned_in_rounded),
+                    ? const Tooltip(
+                        message: "pending", child: Icon(Icons.pending_actions))
+                    : const Tooltip(
+                        message: "accepted",
+                        child: Icon(Icons.assignment_turned_in_rounded),
+                      ),
+                // Icon(Icons.assignment_turned_in_rounded),
                 if (data["status"])
                   IconButton(
                     icon: Icon(Icons.directions),
+                    tooltip: "directions",
                     onPressed: () async {
                       print("pressed direction button");
                       try {
