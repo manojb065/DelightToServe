@@ -1,11 +1,16 @@
 import 'package:delightoserver/auth/login.dart';
 import 'package:delightoserver/auth/register.dart';
+import 'package:delightoserver/cloth/ClothDonationForm.dart';
 import 'package:delightoserver/food/Amain.dart';
-import 'package:delightoserver/food/tracking/map.dart';
+import 'food/FoodDonationForm.dart';
 import 'package:flutter/material.dart';
+import 'cloth/Amain.dart';
+import 'book/Amain.dart';
+import 'book/BookDonationForm.dart';
+import 'book/DonateRequest.dart';
 import 'main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'food/FoodDonationForm.dart';
+
 import 'auth/user.dart';
 
 class screenRoute {
@@ -30,10 +35,19 @@ class screenRoute {
                   lat: arg[1],
                   long: arg[2],
                 ));
-      case "/track":
-        return MaterialPageRoute(builder: (build) => Tracking());
+
       case "/profile":
         return MaterialPageRoute(builder: (build) => UserProfile());
+      case "/clist":
+        return MaterialPageRoute(builder: (_) => ClothAshramList());
+      case "/cloth":
+        return MaterialPageRoute(
+            builder: (build) => ClothDonateRequest(Aname: arg[0]));
+      case "/blist":
+        return MaterialPageRoute(builder: (_) => BookAshramList());
+      case "/book":
+        return MaterialPageRoute(
+            builder: (build) => BookDonateRequest(Aname: arg[0]));
       default:
         return MaterialPageRoute(builder: (build) => Login());
     }

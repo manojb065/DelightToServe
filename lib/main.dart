@@ -24,7 +24,6 @@ void main() async {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text("Delight to Server"),
@@ -36,7 +35,7 @@ class Home extends StatelessWidget {
                 Navigator.of(context).pushNamed("/profile");
               },
               icon: Icon(Icons.account_circle_outlined),
-              color: Colors.black,
+              color: Theme.of(context).accentIconTheme.color,
             ),
           )
         ],
@@ -52,8 +51,18 @@ class Home extends StatelessWidget {
                 },
                 icon: Icon(Icons.food_bank),
                 label: Text("food Donate")),
-            Text("clothes"),
-            Text("books"),
+            TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/blist");
+                },
+                icon: Icon(Icons.book),
+                label: Text("book Donate")),
+            TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/clist");
+                },
+                icon: Icon(Icons.book),
+                label: Text("cloth Donate")),
             Text("donations")
           ],
         ),

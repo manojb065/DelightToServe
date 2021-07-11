@@ -105,26 +105,6 @@ class _UserProfileState extends State<UserProfile> {
                       hintText: "example@gmail.com",
                     ),
                   ),
-                  FormBuilderTextField(
-                    name: "phone",
-                    initialValue: widget.usr.phoneNumber,
-                    maxLength: 10,
-                    onSubmitted: (val) {
-                      saveUpdate();
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      labelText: "phone",
-                      prefixIcon: Icon(Icons.account_box_outlined),
-                      hintText: "xxx-xxx-xxxx",
-                    ),
-                    keyboardType: TextInputType.phone,
-                    validator: (val) {
-                      if (val!.length != 10) {
-                        return "enter valid number";
-                      }
-                    },
-                  ),
                   ElevatedButton.icon(
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();

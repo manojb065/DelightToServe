@@ -13,25 +13,10 @@ class ReqList extends StatefulWidget {
 class _ReqListState extends State<ReqList> {
   List<Widget> list = new List<Widget>.empty(growable: true);
 
-  late double lat, long;
-  static void _showDirection(double lat, double long) async {
-    bool flag = await MapLauncher.isMapAvailable(MapType.google) as bool;
-    Location location = new Location();
-    // _locData =
-    await location.getLocation().then((value) {
-      lat = value.latitude!;
-      long = value.longitude!;
-    });
-    await MapLauncher.showDirections(
-        mapType: MapType.google,
-        destination: Coords(lat, long),
-        origin: Coords(lat, long));
-  }
-
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-        .collection('foodrequest')
+        .collection('bookrequest')
         .where("name",
             isEqualTo: FirebaseAuth.instance.currentUser!.displayName)
         .snapshots();
@@ -55,14 +40,8 @@ class _ReqListState extends State<ReqList> {
           var d = DateTime.fromMicrosecondsSinceEpoch(
               data['time'].microsecondsSinceEpoch);
 
-          String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
+          String formattedDate = DateFormat('yyyy-MM-dd').format(d);
           return new ListTile(
-            // onTap: () {
-            //   print("${data['aname']} got selected");
-            //   if (data['status']) {
-            //     Navigator.of(context).pushNamed("/track");
-            //   }
-            // },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -76,46 +55,16 @@ class _ReqListState extends State<ReqList> {
                             strokeWidth: 3.5,
                             color: Colors.blueGrey,
                           ),
-                        )
-                        // Icon(Icons.pending_actions)
-                        )
+                        ))
                     : const Tooltip(
                         message: "accepted",
                         child: Icon(Icons.check_circle),
                       ),
-                // Icon(Icons.assignment_turned_in_rounded),
-                if (data["status"])
-                  IconButton(
-                    icon: Icon(Icons.directions),
-                    tooltip: "directions",
-                    onPressed: () async {
-                      print("pressed direction button");
-                      try {
-                        final availableMaps = await MapLauncher.installedMaps;
-                        print(availableMaps);
-                      } catch (e) {
-                        print(e);
-                      }
-                      bool flag =
-                          await MapLauncher.isMapAvailable(MapType.google)
-                              as bool;
-                      Location location = new Location();
-                      // _locData =
-                      await location
-                          .getLocation()
-                          .then((value) => print(value));
-                      await MapLauncher.showDirections(
-                          mapType: MapType.google,
-                          destination: Coords(data["lat"], data["long"]),
-                          directionsMode: DirectionsMode.driving);
-                      // _showDirection(data["lat"], data["long"]);
-                    },
-                  ),
               ],
             ),
             tileColor: Colors.deepOrangeAccent[600],
             selectedTileColor: Colors.cyanAccent,
-            title: new Text("${data.values.elementAt(1)}"),
+            title: new Text("${data.values.elementAt(2)}"),
             subtitle: new Text("Date $formattedDate "),
           );
         }).toList());

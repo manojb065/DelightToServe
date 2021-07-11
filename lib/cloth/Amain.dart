@@ -1,16 +1,16 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'Alist.dart';
+import './Alist.dart';
 
 import 'DonateRequest.dart';
 
-class AshramList extends StatefulWidget {
+class ClothAshramList extends StatefulWidget {
   @override
   _AshramListState createState() => _AshramListState();
 }
 
-class _AshramListState extends State<AshramList> {
+class _AshramListState extends State<ClothAshramList> {
   List<Widget> list = new List<Widget>.empty(growable: true);
   GlobalKey _bottomNavigationKey = GlobalKey();
   int _page = 0;
@@ -26,7 +26,7 @@ class _AshramListState extends State<AshramList> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Food"),
+          title: Text("Cloth"),
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: _bottomNavigationKey,
