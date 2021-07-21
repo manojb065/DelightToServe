@@ -4,46 +4,49 @@ import 'package:flutter/material.dart';
 class Alist extends StatelessWidget {
   List<Widget> list = new List<Widget>.empty(growable: true);
   var db;
-  Alist({required this.db});
+  String path;
+  Alist({required this.db, required this.path});
 
   Widget _buildList(
       {required Map<String, dynamic> value, required BuildContext context}) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(
-              value['name'],
-              style: TextStyle(fontSize: 30),
-              textAlign: TextAlign.center,
-            ),
-            subtitle: Column(
-              children: [
-                Text(
-                  "Distance ${value["distance"]} kms",
-                  textAlign: TextAlign.start,
-                ),
-                Text(
-                  "${value["location"]["location"]}",
-                  overflow: TextOverflow.fade,
-                  maxLines: 2,
-                  textAlign: TextAlign.start,
-                )
-              ],
-            ),
-          ),
-          ElevatedButton.icon(
-              onPressed: () =>
-                  Navigator.of(context).pushNamed("/cloth", arguments: [
-                    value['name'],
-                  ]),
-              icon: Icon(Icons.add_circle_outline),
-              label: Text("Donate"))
-        ],
+    return Stack(fit: StackFit.passthrough, children: [
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/a.jpg"), fit: BoxFit.cover)),
+        alignment: Alignment.bottomCenter,
+        child: Card(
+          child: ListTile(
+              title: Text(
+                value['aname'],
+                style: TextStyle(fontSize: 30, color: Colors.blue[50]),
+                textAlign: TextAlign.center,
+              ),
+              subtitle: Text(
+                "${value["location"]["location"]}",
+                style: TextStyle(color: ThemeData.dark().accentColor),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+              )),
+        ),
       ),
-      color: Colors.teal[200],
-    );
+      GestureDetector(
+        onTap: () => Navigator.of(context).pushNamed(path, arguments: [
+          value['aname'],
+          value['location']["lat"],
+          value['location']['long']
+        ]),
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black87, Colors.transparent])),
+        ),
+      ),
+    ]);
   }
 
   void _listBuild(Map<String, dynamic> data, BuildContext con) {
@@ -76,7 +79,7 @@ class Alist extends StatelessWidget {
 
               return GridView.count(
                   primary: false,
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   crossAxisCount: 2,

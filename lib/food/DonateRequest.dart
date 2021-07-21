@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:location/location.dart';
 
-class ReqList extends StatefulWidget {
+class FoodReqList extends StatefulWidget {
   @override
   _ReqListState createState() => _ReqListState();
 }
 
-class _ReqListState extends State<ReqList> {
+class _ReqListState extends State<FoodReqList> {
   List<Widget> list = new List<Widget>.empty(growable: true);
 
   late double lat, long;
@@ -57,12 +57,6 @@ class _ReqListState extends State<ReqList> {
 
           String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(d);
           return new ListTile(
-            // onTap: () {
-            //   print("${data['aname']} got selected");
-            //   if (data['status']) {
-            //     Navigator.of(context).pushNamed("/track");
-            //   }
-            // },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -89,26 +83,15 @@ class _ReqListState extends State<ReqList> {
                     icon: Icon(Icons.directions),
                     tooltip: "directions",
                     onPressed: () async {
-                      print("pressed direction button");
-                      try {
-                        final availableMaps = await MapLauncher.installedMaps;
-                        print(availableMaps);
-                      } catch (e) {
-                        print(e);
-                      }
                       bool flag =
                           await MapLauncher.isMapAvailable(MapType.google)
                               as bool;
                       Location location = new Location();
-                      // _locData =
-                      await location
-                          .getLocation()
-                          .then((value) => print(value));
+
                       await MapLauncher.showDirections(
                           mapType: MapType.google,
                           destination: Coords(data["lat"], data["long"]),
                           directionsMode: DirectionsMode.driving);
-                      // _showDirection(data["lat"], data["long"]);
                     },
                   ),
               ],

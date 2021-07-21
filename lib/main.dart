@@ -2,21 +2,21 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:delightoserver/screenRoute.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SharedPreferences data = await SharedPreferences.getInstance();
+  String usr = data.getString("usrname");
+  String path = "/";
+  if (usr != null) {
+    path = "/home";
+  }
   runApp(MaterialApp(
-    initialRoute: "/",
-    darkTheme: ThemeData(
-      primarySwatch: Colors.grey,
-      primaryColor: Colors.black,
-      brightness: Brightness.dark,
-      backgroundColor: const Color(0xFF212121),
-      accentColor: Colors.white,
-      accentIconTheme: IconThemeData(color: Colors.black),
-      dividerColor: Colors.black12,
-    ),
+    debugShowCheckedModeBanner: false,
+    initialRoute: path,
+    theme: ThemeData.dark(),
     onGenerateRoute: screenRoute.routeScreen,
   ));
 }
@@ -26,7 +26,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Delight to Server"),
+        title: Text("Delight to Serve"),
         actions: [
           Tooltip(
             message: "profile",
@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
                 Navigator.of(context).pushNamed("/profile");
               },
               icon: Icon(Icons.account_circle_outlined),
-              color: Theme.of(context).accentIconTheme.color,
+              // color: Theme.of(context).accentIconTheme.color,
             ),
           )
         ],
@@ -47,23 +47,26 @@ class Home extends StatelessWidget {
           children: [
             TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/alist");
+                  Navigator.of(context)
+                      .pushNamed("/list", arguments: ["Food", "/food"]);
                 },
                 icon: Icon(Icons.food_bank),
                 label: Text("food Donate")),
             TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/blist");
+                  Navigator.of(context)
+                      .pushNamed("/list", arguments: ["Book", "/book"]);
                 },
                 icon: Icon(Icons.book),
                 label: Text("book Donate")),
             TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/clist");
+                  Navigator.of(context)
+                      .pushNamed("/list", arguments: ["Cloth", "/cloth"]);
                 },
-                icon: Icon(Icons.book),
+                icon: Icon(Icons.shopping_cart),
                 label: Text("cloth Donate")),
-            Text("donations")
+            // Text("donations")
           ],
         ),
       ),

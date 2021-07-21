@@ -1,8 +1,8 @@
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -41,14 +41,7 @@ class BookDonateRequest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Food"),
-          actions: [
-            IconButton(
-              onPressed: () => print("user profile"),
-              icon: Icon(Icons.account_circle_outlined),
-              color: Colors.cyan[600],
-            )
-          ],
+          title: Text("Book"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -59,7 +52,8 @@ class BookDonateRequest extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 250,
-                      child: Image.asset("assets/img.jpg"),
+                      width: MediaQueryData.fromWindow(window).size.width,
+                      child: Image.asset("assets/a.jpg", fit: BoxFit.fill),
                     ),
                     Container(
                       padding: const EdgeInsets.all(5.0),
@@ -120,7 +114,7 @@ class BookDonateRequest extends StatelessWidget {
                       name: "time",
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
-                        labelText: "Pick Date and Time *",
+                        labelText: "Pick Date  *",
                         prefixIcon: Icon(Icons.alarm),
                       ),
                       inputType: InputType.date,

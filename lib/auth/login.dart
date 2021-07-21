@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screenRoute.dart';
 
 class Login extends StatefulWidget {
@@ -33,10 +31,12 @@ class _LoginState extends State<Login> {
           .collection("AshramUser")
           .where("uid", isEqualTo: usr.user!.uid)
           .get()
-          .then((value) {
+          .then((value) async {
         if (value.docs.isEmpty) {
-          print("entred");
-          Navigator.of(context).popAndPushNamed("/");
+          SharedPreferences data = await SharedPreferences.getInstance();
+          data.setString("usrname", usr.user!.displayName ?? "");
+          print(data.getString("usrname"));
+          Navigator.of(context).popAndPushNamed("/home");
         } else {
           FirebaseAuth.instance.signOut();
         }
@@ -60,67 +60,88 @@ class _LoginState extends State<Login> {
       onGenerateRoute: screenRoute.routeScreen,
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Delight to Server"),
+          title: Text("Delight to Serve"),
         ),
-        body: FormBuilder(
-          key: _formkey,
-          child: Column(
-            children: [
-              FormBuilderTextField(
-                name: "email",
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
-                  labelText: "Email *",
-                  prefixIcon: Icon(Icons.account_box_outlined),
-                  hintText: "example@gmail.com",
-                ),
-                mouseCursor: MouseCursor.defer,
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.email(context),
-                  FormBuilderValidators.required(context)
-                ]),
-              ),
-              FormBuilderTextField(
-                name: "password",
-                keyboardType: TextInputType.text,
-                obscureText: _showPassword,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(
-                    labelText: "Password *",
-                    prefixIcon: Icon(Icons.lock),
-                    hintText: "****",
-                    suffixIcon: !_showPassword
-                        ? IconButton(
-                            onPressed: () {
-                              toggle();
-                            },
-                            icon: Icon(Icons.visibility_off))
-                        : IconButton(
-                            onPressed: () => toggle(),
-                            icon: Icon(Icons.visibility))),
-                validator: FormBuilderValidators.required(context,
-                    errorText: "Required"),
-              ),
-              ElevatedButton.icon(
-                  onPressed: () {
-                    if (_formkey.currentState!.validate()) {
-                      _formkey.currentState!.save();
-                    }
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.white, Colors.blue],
+                      end: Alignment.topCenter,
+                      begin: Alignment.bottomCenter)),
+            ),
+            FormBuilder(
+              key: _formkey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: FormBuilderTextField(
+                      name: "email",
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        enabled: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(60)),
+                        labelText: "Email *",
+                        prefixIcon: Icon(Icons.account_box_outlined),
+                        hintText: "example@gmail.com",
+                      ),
+                      mouseCursor: MouseCursor.defer,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.email(context),
+                        FormBuilderValidators.required(context)
+                      ]),
+                    ),
+                  ),
+                  FormBuilderTextField(
+                    name: "password",
+                    keyboardType: TextInputType.text,
+                    obscureText: _showPassword,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                        enabled: true,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(60)),
+                        labelText: "Password *",
+                        prefixIcon: Icon(Icons.lock),
+                        hintText: "****",
+                        suffixIcon: !_showPassword
+                            ? IconButton(
+                                onPressed: () {
+                                  toggle();
+                                },
+                                icon: Icon(Icons.visibility_off))
+                            : IconButton(
+                                onPressed: () => toggle(),
+                                icon: Icon(Icons.visibility))),
+                    validator: FormBuilderValidators.required(context,
+                        errorText: "Required"),
+                  ),
+                  ElevatedButton.icon(
+                      onPressed: () {
+                        if (_formkey.currentState!.validate()) {
+                          _formkey.currentState!.save();
+                        }
 
-                    Map<String, dynamic>.from(_formkey.currentState!.value);
-                    _sigin(Map<String, dynamic>.from(
-                        _formkey.currentState!.value));
-                  },
-                  icon: Icon(Icons.send),
-                  label: Text("Login")),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).popAndPushNamed("/reg");
-                  },
-                  child: Text("click here ? signup"))
-            ],
-          ),
-          autovalidateMode: AutovalidateMode.disabled,
+                        Map<String, dynamic>.from(_formkey.currentState!.value);
+                        _sigin(Map<String, dynamic>.from(
+                            _formkey.currentState!.value));
+                      },
+                      icon: Icon(Icons.send),
+                      label: Text("Login")),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed("/reg");
+                      },
+                      child: Text("click here ? signup"))
+                ],
+              ),
+              autovalidateMode: AutovalidateMode.disabled,
+            )
+          ],
         ),
       ),
     );

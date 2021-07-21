@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfile extends StatefulWidget {
   late User usr;
@@ -108,6 +109,9 @@ class _UserProfileState extends State<UserProfile> {
                   ElevatedButton.icon(
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
+                        SharedPreferences d =
+                            await SharedPreferences.getInstance();
+                        d.remove("usrname");
                         Navigator.of(context).popAndPushNamed("/");
                       },
                       icon: Icon(Icons.send),

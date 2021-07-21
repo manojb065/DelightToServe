@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:location/location.dart';
 
-class ReqList extends StatefulWidget {
+class ClothReqList extends StatefulWidget {
   @override
   _ReqListState createState() => _ReqListState();
 }
 
-class _ReqListState extends State<ReqList> {
+class _ReqListState extends State<ClothReqList> {
   List<Widget> list = new List<Widget>.empty(growable: true);
 
   @override

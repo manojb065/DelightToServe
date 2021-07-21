@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -40,14 +41,7 @@ class ClothDonateRequest extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Food"),
-          actions: [
-            IconButton(
-              onPressed: () => print("user profile"),
-              icon: Icon(Icons.account_circle_outlined),
-              color: Colors.cyan[600],
-            )
-          ],
+          title: Text("Clothes"),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -58,7 +52,8 @@ class ClothDonateRequest extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 250,
-                      child: Image.asset("assets/img.jpg"),
+                      width: MediaQueryData.fromWindow(window).size.width,
+                      child: Image.asset("assets/a.jpg", fit: BoxFit.fill),
                     ),
                     Container(
                       padding: const EdgeInsets.all(5.0),
